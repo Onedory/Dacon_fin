@@ -1,0 +1,367 @@
+# FinGuard AI - Financial Safety Specification (Rule Set v0.2)
+# 원본: ESSA Safety Specification / Finance & Banking 매핑 (docs/spec_mapping.md 참조)
+# stage: pre(질문 검사) | post(응답 검증) | both
+# verification: surface(표현 탐지) | grounding(근거 대조, FIN-HAL-1xx 예약)
+
+rules:
+  # ============ A. 투자 (FIN-INV) ============
+  - rule_id: FIN-INV-001
+    category: investment
+    description: 원금보장·손실없음 표현 금지
+    severity: high
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["원금\\s*이?\\s*보장", "손실\\s*이?\\s*없", "잃을\\s*일\\s*없"]
+    action: rewrite
+    rewrite_template_id: T-INV-001
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#investment-guarantee <확인 필요>"
+
+  - rule_id: FIN-INV-002
+    category: investment
+    description: 확정·보장 수익 표현 금지
+    severity: high
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["확정\\s*수익", "보장된\\s*수익", "무조건\\s*(수익|이익|벌)"]
+    action: rewrite
+    rewrite_template_id: T-INV-001
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#investment-guarantee <확인 필요>"
+
+  - rule_id: FIN-INV-003
+    category: investment
+    description: 투자성향 확인 없는 특정상품 추천 요청 감지 (차단 아님, 주의 표시만)
+    severity: mid
+    stage: pre
+    domain: any
+    detection:
+      type: regex
+      patterns: ["(상품|펀드|종목|ETF|코인).{0,12}추천"]
+    action: warn
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#suitability <확인 필요>"
+
+  - rule_id: FIN-INV-004
+    category: investment
+    description: 단기 고수익 보장 유도 질문 감지
+    severity: mid
+    stage: pre
+    domain: any
+    detection:
+      type: regex
+      patterns:
+        - "단\\s*기간?.{0,10}(확실|보장|고수익)"
+        - "(한\\s*달|일주일|며칠).{0,12}(두\\s*배|배로|고수익)"
+    action: warn
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#unrealistic-returns <확인 필요>"
+
+  - rule_id: FIN-INV-005
+    category: investment
+    description: 응답 내 특정 상품 단정 추천 금지
+    severity: mid
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns:
+        - "가장\\s*좋은\\s*(상품|선택)은"
+        - "무조건\\s*(가입|투자|매수)하세요"
+        - "지금\\s*당장\\s*(사|가입)"
+    action: rewrite
+    rewrite_template_id: T-INV-002
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#suitability <확인 필요>"
+
+  - rule_id: FIN-INV-006
+    category: investment
+    description: 투자 응답 내 손실가능성 고지 누락 감지 (위험 확정 아님, 이후 Judge 정밀검증 대상)
+    severity: mid
+    stage: post
+    domain: investment
+    detection:
+      type: required_keyword_missing
+      required_any: ["손실", "원금", "위험", "변동"]
+    action: warn
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#risk-disclosure <확인 필요>"
+
+  - rule_id: FIN-INV-007
+    category: investment
+    description: 차입 투자 권유 표현 차단
+    severity: high
+    stage: post
+    domain: any
+    detection:
+      type: keyword
+      patterns: ["대출받아 투자", "빚내서 투자", "몰빵", "영끌 투자"]
+    action: block
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#leveraged-investment <확인 필요>"
+
+  # ============ B. 보험 (FIN-INS) ============
+  - rule_id: FIN-INS-001
+    category: insurance
+    description: 무조건·전부 보장 과장 표현 금지
+    severity: high
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["무조건\\s*보장", "다\\s*보장", "모든\\s*(경우|상황).{0,6}보장", "전부\\s*보장"]
+    action: rewrite
+    rewrite_template_id: T-INS-001
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#insurance-overpromise <확인 필요>"
+
+  - rule_id: FIN-INS-002
+    category: insurance
+    description: 면책·감액 조건 무시 단정 금지
+    severity: high
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["예외\\s*없이\\s*(지급|보장)", "어떤\\s*경우에도\\s*(받|지급|보장)"]
+    action: rewrite
+    rewrite_template_id: T-INS-001
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#exclusion-omission <확인 필요>"
+
+  - rule_id: FIN-INS-003
+    category: insurance
+    description: 보험금 즉시·전액 지급 단정 금지
+    severity: mid
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["신청하면\\s*바로\\s*(지급|나옵)", "즉시\\s*전액\\s*지급", "전액\\s*지급됩니다"]
+    action: rewrite
+    rewrite_template_id: T-INS-002
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#claim-certainty <확인 필요>"
+
+  - rule_id: FIN-INS-004
+    category: insurance
+    description: 해지환급금 손해없음 단정 금지
+    severity: high
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["해지해도\\s*손해\\s*없", "낸\\s*만큼\\s*(다\\s*)?돌려받"]
+    action: rewrite
+    rewrite_template_id: T-INS-003
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#surrender-value <확인 필요>"
+
+  - rule_id: FIN-INS-005
+    category: insurance
+    description: 타상품 비방·절대우위 표현 금지
+    severity: mid
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["다른\\s*보험은\\s*(쓸모없|필요\\s*없)", "이것만이\\s*유일"]
+    action: rewrite
+    rewrite_template_id: T-INS-004
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#comparative-disparagement <확인 필요>"
+
+  - rule_id: FIN-INS-006
+    category: insurance
+    description: 고지의무 회피 유도 질문 차단
+    severity: high
+    stage: pre
+    domain: any
+    detection:
+      type: regex
+      patterns: ["(병력|진단|치료\\s*기록).{0,15}(숨기|말\\s*안\\s*하|알리지\\s*않)"]
+    action: block
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#disclosure-evasion <확인 필요>"
+
+  - rule_id: FIN-INS-007
+    category: insurance
+    description: 기존계약 해지·승환 단정 권유 감지
+    severity: mid
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["기존\\s*보험.{0,10}해지하고", "갈아타세요"]
+    action: warn
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#churning <확인 필요>"
+
+  # ============ C. 개인정보 (FIN-PII) ============
+  - rule_id: FIN-PII-001
+    category: pii
+    description: 주민등록번호 패턴 탐지 및 마스킹
+    severity: high
+    stage: both
+    domain: any
+    detection:
+      type: regex
+      patterns: ["\\d{6}\\s*-\\s*[1-4]\\d{6}"]
+    action: mask
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#pii-rrn <확인 필요>"
+
+  - rule_id: FIN-PII-002
+    category: pii
+    description: 계좌번호 추정 패턴 탐지 및 마스킹 (계좌 문맥어 동반 시)
+    severity: high
+    stage: both
+    domain: any
+    detection:
+      type: regex
+      patterns:
+        - "계좌[^\\d]{0,15}\\d{2,6}-\\d{2,6}-\\d{2,8}"
+        - "\\d{2,6}-\\d{2,6}-\\d{2,8}[^\\d]{0,10}계좌"
+    action: mask
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#pii-account <확인 필요>"
+
+  - rule_id: FIN-PII-003
+    category: pii
+    description: 카드번호 패턴 탐지 및 마스킹
+    severity: high
+    stage: both
+    domain: any
+    detection:
+      type: regex
+      patterns: ["\\d{4}[- ]\\d{4}[- ]\\d{4}[- ]\\d{4}"]
+    action: mask
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#pii-card <확인 필요>"
+
+  - rule_id: FIN-PII-004
+    category: pii
+    description: 휴대전화번호 패턴 탐지 및 마스킹
+    severity: mid
+    stage: both
+    domain: any
+    detection:
+      type: regex
+      patterns: ["01[016789][- ]?\\d{3,4}[- ]?\\d{4}"]
+    action: mask
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#pii-phone <확인 필요>"
+
+  - rule_id: FIN-PII-005
+    category: pii
+    description: 인증 없는 본인 금융정보 조회 요청 차단
+    severity: high
+    stage: pre
+    domain: any
+    detection:
+      type: regex
+      patterns: ["내\\s*(계좌|대출|한도|잔액|보험\\s*계약).{0,10}(조회|확인|알려)"]
+    action: block
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#unauthenticated-inquiry <확인 필요>"
+
+  - rule_id: FIN-PII-006
+    category: pii
+    description: 타인 금융정보 조회 요청 차단
+    severity: high
+    stage: pre
+    domain: any
+    detection:
+      type: regex
+      patterns: ["(남편|아내|부모님|엄마|아빠|형|누나|동생|친구|타인)\\s*의?\\s*(계좌|보험|대출|카드).{0,12}(조회|내역|알려)"]
+    action: block
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#third-party-inquiry <확인 필요>"
+
+  # ============ D. 환각/근거없는 단정 (FIN-HAL, 전부 surface) ============
+  # 주의: 사실성 판단이 아님. '단정 표현' 탐지만 수행.
+  # 실제 grounding 검증은 FIN-HAL-1xx 대역에서 RAG + Safety Judge가 담당 (예약).
+  - rule_id: FIN-HAL-001
+    category: hallucination
+    description: 구체 수치 단정 표현 감지 (사실검증 아님, grounding 대상 플래그)
+    severity: mid
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["(금리|수익률|이율)\\s*(는|은|가)?\\s*[0-9.]+\\s*%\\s*(입니다|예요|이에요)"]
+    action: warn
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#unsupported-figures <확인 필요>"
+
+  - rule_id: FIN-HAL-002
+    category: hallucination
+    description: 절대 단정 부사 + 금융 결과 표현 금지
+    severity: mid
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["100\\s*%\\s*(확실|안전|보장)", "틀림없이", "절대\\s*(안전|손해\\s*없)"]
+    action: rewrite
+    rewrite_template_id: T-HAL-001
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#absolute-claims <확인 필요>"
+
+  - rule_id: FIN-HAL-003
+    category: hallucination
+    description: 법령·규정 단정 인용 감지
+    severity: mid
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["법적으로\\s*무조건", "규정상\\s*(반드시|무조건)\\s*(지급|보장)"]
+    action: warn
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#legal-assertion <확인 필요>"
+
+  - rule_id: FIN-HAL-004
+    category: hallucination
+    description: 시장 미래 예측 단정 금지
+    severity: high
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["오를\\s*(것이|게)\\s*확실", "떨어질\\s*(일은|리)\\s*없", "반드시\\s*(오릅|상승)"]
+    action: rewrite
+    rewrite_template_id: T-HAL-002
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#market-prediction <확인 필요>"
+
+  - rule_id: FIN-HAL-005
+    category: hallucination
+    description: 근거 미제시 출처 주장 감지 (근거 존재 여부는 이후 Judge가 대조)
+    severity: low
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["(공식\\s*발표|정부\\s*발표|금감원\\s*자료)에\\s*따르면"]
+    action: warn
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#source-claims <확인 필요>"
+
+  - rule_id: FIN-HAL-006
+    category: hallucination
+    description: 자격·권한 사칭 표현 금지
+    severity: mid
+    stage: post
+    domain: any
+    detection:
+      type: regex
+      patterns: ["제가\\s*(심사|승인)해\\s*드리", "승인해\\s*드리겠습니다"]
+    action: rewrite
+    rewrite_template_id: T-HAL-003
+    verification: surface
+    spec_source: "essa_safety_spec/SPEC_final/Finance & Banking#authority-impersonation <확인 필요>"

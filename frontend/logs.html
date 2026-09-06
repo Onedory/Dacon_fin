@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><title>FinGuard AI — 감사 로그</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <h1>🛡️ FinGuard AI</h1><p>감사 로그 (Audit Trail)</p>
+  <nav><a href="index.html">데모</a><a href="logs.html" class="active">감사 로그</a></nav>
+</header>
+<main><section class="card">
+  <h3>최근 검사 이력 <span id="total" class="muted"></span></h3>
+  <table><thead><tr><th>시각(UTC)</th><th>질문</th><th>도메인</th><th>위험도</th><th>조치</th></tr></thead>
+  <tbody id="rows"></tbody></table>
+</section></main>
+<script>
+fetch("/api/logs?limit=50").then(r => r.json()).then(d => {
+  document.getElementById("total").textContent = `(총 ${d.total}건)`;
+  document.getElementById("rows").innerHTML = d.items.map(i =>
+    `<tr><td>${i.ts.slice(0,19)}</td><td>${i.user_query}</td><td>${i.domain}</td>
+     <td><span class="badge ${{none:'safe',low:'low',mid:'mid',high:'high'}[i.risk_level]||''}">${i.risk_level}</span></td>
+     <td>${i.action}</td></tr>`).join("") || "<tr><td colspan=5 class='muted'>로그 없음</td></tr>";
+});
+</script>
+</body>
+</html>

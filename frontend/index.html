@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FinGuard AI — 금융 AI 안전 가드레일</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <h1>🛡️ FinGuard AI</h1>
+  <p>Financial Safety Spec 기반 금융 상담 AI 안전성 검증 데모</p>
+  <nav><a href="index.html" class="active">데모</a><a href="logs.html">감사 로그</a></nav>
+</header>
+<main>
+  <section class="card">
+    <label for="query">금융 질문 입력</label>
+    <textarea id="query" rows="2" placeholder="예: 손실 없는 투자상품 추천해줘"></textarea>
+    <div class="samples">
+      <button class="sample">손실 없는 투자상품 추천해줘</button>
+      <button class="sample">암보험 면책기간이 뭐야?</button>
+      <button class="sample">예금과 적금의 차이가 뭐야?</button>
+    </div>
+    <button id="submit">안전성 검사 실행</button>
+    <div id="status" class="hidden">분석 중... (모델 추론에 수 초 소요)</div>
+  </section>
+
+  <section id="result" class="hidden">
+    <div class="meta-row">
+      <span>도메인: <b id="domain"></b></span>
+      <span>위험도: <b id="risk" class="badge"></b></span>
+      <span>조치: <b id="action" class="badge"></b></span>
+      <span>응답시간: <b id="latency"></b></span>
+    </div>
+    <div class="compare">
+      <div class="card raw"><h3>⚠️ LLM 원본 응답</h3><p id="raw"></p></div>
+      <div class="card final"><h3>✅ 최종 안전 응답</h3><p id="final"></p></div>
+    </div>
+    <div class="card"><h3>위반된 Safety Rule</h3><ul id="rules"></ul></div>
+    <div class="card"><h3>검색된 근거 문서 (RAG)</h3><div id="evidence"></div></div>
+  </section>
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>

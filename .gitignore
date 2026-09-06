@@ -1,0 +1,10 @@
+venv/
+.venv/
+__pycache__/
+.env
+models/
+data/*.db
+data/index/*.pkl
+data/index/*_meta.json
+.pytest_cache/
+*.pem

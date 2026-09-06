@@ -1,0 +1,184 @@
+[
+ {
+  "doc_id": "FIN-INV-001",
+  "title": "원금보장·손실없음 표현 금지",
+  "content": "원금보장·손실없음 표현 금지",
+  "source": "FinGuard Safety Spec",
+  "category": "investment"
+ },
+ {
+  "doc_id": "FIN-INV-002",
+  "title": "확정·보장 수익 표현 금지",
+  "content": "확정·보장 수익 표현 금지",
+  "source": "FinGuard Safety Spec",
+  "category": "investment"
+ },
+ {
+  "doc_id": "FIN-INV-003",
+  "title": "투자성향 확인 없는 특정상품 추천 요청 감지 (차단 아님, 주의 표시만)",
+  "content": "투자성향 확인 없는 특정상품 추천 요청 감지 (차단 아님, 주의 표시만)",
+  "source": "FinGuard Safety Spec",
+  "category": "investment"
+ },
+ {
+  "doc_id": "FIN-INV-004",
+  "title": "단기 고수익 보장 유도 질문 감지",
+  "content": "단기 고수익 보장 유도 질문 감지",
+  "source": "FinGuard Safety Spec",
+  "category": "investment"
+ },
+ {
+  "doc_id": "FIN-INV-005",
+  "title": "응답 내 특정 상품 단정 추천 금지",
+  "content": "응답 내 특정 상품 단정 추천 금지",
+  "source": "FinGuard Safety Spec",
+  "category": "investment"
+ },
+ {
+  "doc_id": "FIN-INV-006",
+  "title": "투자 응답 내 손실가능성 고지 누락 감지 (위험 확정 아님, 이후 Judge 정밀검증 대상)",
+  "content": "투자 응답 내 손실가능성 고지 누락 감지 (위험 확정 아님, 이후 Judge 정밀검증 대상)",
+  "source": "FinGuard Safety Spec",
+  "category": "investment"
+ },
+ {
+  "doc_id": "FIN-INV-007",
+  "title": "차입 투자 권유 표현 차단",
+  "content": "차입 투자 권유 표현 차단",
+  "source": "FinGuard Safety Spec",
+  "category": "investment"
+ },
+ {
+  "doc_id": "FIN-INS-001",
+  "title": "무조건·전부 보장 과장 표현 금지",
+  "content": "무조건·전부 보장 과장 표현 금지",
+  "source": "FinGuard Safety Spec",
+  "category": "insurance"
+ },
+ {
+  "doc_id": "FIN-INS-002",
+  "title": "면책·감액 조건 무시 단정 금지",
+  "content": "면책·감액 조건 무시 단정 금지",
+  "source": "FinGuard Safety Spec",
+  "category": "insurance"
+ },
+ {
+  "doc_id": "FIN-INS-003",
+  "title": "보험금 즉시·전액 지급 단정 금지",
+  "content": "보험금 즉시·전액 지급 단정 금지",
+  "source": "FinGuard Safety Spec",
+  "category": "insurance"
+ },
+ {
+  "doc_id": "FIN-INS-004",
+  "title": "해지환급금 손해없음 단정 금지",
+  "content": "해지환급금 손해없음 단정 금지",
+  "source": "FinGuard Safety Spec",
+  "category": "insurance"
+ },
+ {
+  "doc_id": "FIN-INS-005",
+  "title": "타상품 비방·절대우위 표현 금지",
+  "content": "타상품 비방·절대우위 표현 금지",
+  "source": "FinGuard Safety Spec",
+  "category": "insurance"
+ },
+ {
+  "doc_id": "FIN-INS-006",
+  "title": "고지의무 회피 유도 질문 차단",
+  "content": "고지의무 회피 유도 질문 차단",
+  "source": "FinGuard Safety Spec",
+  "category": "insurance"
+ },
+ {
+  "doc_id": "FIN-INS-007",
+  "title": "기존계약 해지·승환 단정 권유 감지",
+  "content": "기존계약 해지·승환 단정 권유 감지",
+  "source": "FinGuard Safety Spec",
+  "category": "insurance"
+ },
+ {
+  "doc_id": "FIN-PII-001",
+  "title": "주민등록번호 패턴 탐지 및 마스킹",
+  "content": "주민등록번호 패턴 탐지 및 마스킹",
+  "source": "FinGuard Safety Spec",
+  "category": "pii"
+ },
+ {
+  "doc_id": "FIN-PII-002",
+  "title": "계좌번호 추정 패턴 탐지 및 마스킹 (계좌 문맥어 동반 시)",
+  "content": "계좌번호 추정 패턴 탐지 및 마스킹 (계좌 문맥어 동반 시)",
+  "source": "FinGuard Safety Spec",
+  "category": "pii"
+ },
+ {
+  "doc_id": "FIN-PII-003",
+  "title": "카드번호 패턴 탐지 및 마스킹",
+  "content": "카드번호 패턴 탐지 및 마스킹",
+  "source": "FinGuard Safety Spec",
+  "category": "pii"
+ },
+ {
+  "doc_id": "FIN-PII-004",
+  "title": "휴대전화번호 패턴 탐지 및 마스킹",
+  "content": "휴대전화번호 패턴 탐지 및 마스킹",
+  "source": "FinGuard Safety Spec",
+  "category": "pii"
+ },
+ {
+  "doc_id": "FIN-PII-005",
+  "title": "인증 없는 본인 금융정보 조회 요청 차단",
+  "content": "인증 없는 본인 금융정보 조회 요청 차단",
+  "source": "FinGuard Safety Spec",
+  "category": "pii"
+ },
+ {
+  "doc_id": "FIN-PII-006",
+  "title": "타인 금융정보 조회 요청 차단",
+  "content": "타인 금융정보 조회 요청 차단",
+  "source": "FinGuard Safety Spec",
+  "category": "pii"
+ },
+ {
+  "doc_id": "FIN-HAL-001",
+  "title": "구체 수치 단정 표현 감지 (사실검증 아님, grounding 대상 플래그)",
+  "content": "구체 수치 단정 표현 감지 (사실검증 아님, grounding 대상 플래그)",
+  "source": "FinGuard Safety Spec",
+  "category": "hallucination"
+ },
+ {
+  "doc_id": "FIN-HAL-002",
+  "title": "절대 단정 부사 + 금융 결과 표현 금지",
+  "content": "절대 단정 부사 + 금융 결과 표현 금지",
+  "source": "FinGuard Safety Spec",
+  "category": "hallucination"
+ },
+ {
+  "doc_id": "FIN-HAL-003",
+  "title": "법령·규정 단정 인용 감지",
+  "content": "법령·규정 단정 인용 감지",
+  "source": "FinGuard Safety Spec",
+  "category": "hallucination"
+ },
+ {
+  "doc_id": "FIN-HAL-004",
+  "title": "시장 미래 예측 단정 금지",
+  "content": "시장 미래 예측 단정 금지",
+  "source": "FinGuard Safety Spec",
+  "category": "hallucination"
+ },
+ {
+  "doc_id": "FIN-HAL-005",
+  "title": "근거 미제시 출처 주장 감지 (근거 존재 여부는 이후 Judge가 대조)",
+  "content": "근거 미제시 출처 주장 감지 (근거 존재 여부는 이후 Judge가 대조)",
+  "source": "FinGuard Safety Spec",
+  "category": "hallucination"
+ },
+ {
+  "doc_id": "FIN-HAL-006",
+  "title": "자격·권한 사칭 표현 금지",
+  "content": "자격·권한 사칭 표현 금지",
+  "source": "FinGuard Safety Spec",
+  "category": "hallucination"
+ }
+]
